@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 ##
+## リアルタイムでBTCの価格変化をプロットする。
 ## 参考　
 ## https://qiita.com/shionhonda/items/bd2a7aaf143eff4972c4
 ## このサイトでは1分ごとにだったが、10秒ごとに変更する。
@@ -49,16 +50,19 @@ while True:
         
         # 作図
         axe.get_yaxis().get_major_formatter().set_scientific(False)
+        # BTC-FXと現物の価格差が５％以上ある(SFD作動時)場合はFXのラインを赤色に変更。
         if  (abs((data.get('ltp')-dataFX.get('ltp')))/data.get('ltp'))*100  >=5:
             axe.plot(rawsFX,"red",linewidth=2,label="BTC/JPY price in bitflyer")
+            #　現物の価格は灰色の点線
             axe.plot(raws,"grey",linewidth=2, linestyle="dashed")
             axe.set_title("BTC/JPY price in bitflyer FX")
             display(fig)
+        # SFDが発動していない時はグラフの色は黒。
         else:   
             axe.plot(rawsFX,"black",linewidth=2,label="BTC/JPY price in bitflyer")
             axe.plot(raws,"grey",linewidth=2, linestyle="dashed")
             axe.set_title("BTC/JPY price in bitflyer FX")
             display(fig)
-        # 5秒休憩
+        # 5秒休憩して再びグラフを書く
         time.sleep(5)
         axe.cla()
